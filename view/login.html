@@ -1,0 +1,63 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+</head>
+<body>
+    <div>
+        
+        <div>
+            <span>用户名：</span>
+            <input type="text" name="username" />
+        </div>
+        <div>
+            <span>密码：</span>
+            <input type="text" name="parssword" />
+        </div>
+        <button id="login_btn">登录</button>
+    </div>
+
+    <script>
+        const header  = {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json'
+            },
+        };
+
+        function login(data) {
+            fetch('http://localhost:3000/user/login', {
+                ...header,
+                body: JSON.stringify({
+                    userName: data.userName || '张三',
+                    passWord: data.passWord || '456'
+                })
+            })
+            .then(response => response.json()) 
+            .then(res => {
+                console.log(res, 'res---123')
+                if(res.code === 200) {
+                    alert('登录成功1')
+                }else {
+                    alert('登录失败2')
+                }
+            })
+        }
+
+        document.querySelector('#login_btn').onclick =  () => {
+            const userName = document.querySelector('input[name="username"]').value;
+            const passWord = document.querySelector('input[name="parssword"]').value;
+            console.log('ce', userName.value)
+
+            if(userName && passWord) {
+                login({
+                    userName,
+                    passWord,
+                });
+            }
+        }
+    </script>
+</body>
+</html>

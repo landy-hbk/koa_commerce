@@ -1,0 +1,104 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <script src="https://unpkg.com/vue@3.2.31/dist/vue.global.js"></script>
+    <title>Document</title>
+    <style>
+        *{
+            padding: 0;
+            margin: 0;
+        }
+      .category-warrper {
+        display: flex;
+        min-height: 100vh;
+      }
+      .left,
+      .right {
+        flex: 1;
+        padding-top: 20px;
+      }
+      .category-level {
+        width: 50%;
+        padding: 6px 10px;
+        background-color: #f1f1f1;
+        margin-bottom: 10px;
+      }
+      .category-level2 {
+        width: 80%;
+        background-color: #ccc;
+      }
+    </style>
+  </head>
+
+  <body>
+    <div>this is category</div>
+    <div class="category-warrper" id="app">
+      <div class="left">
+        <div class="category-level" v-for="item in categoryLevel1" :key="item.id" @click="getCategorySubList(item.id)">{{ item.mall_category_name }}</div>
+      </div>
+      <div class="right">
+        <div class="category-level category-level2" v-for="item in categoryLevel2" :key="item.id"> {{ item.mall_sub_name }}</div>
+      </div>
+    </div>
+    <script>
+      const {
+        createApp,
+        reactive,
+        toRefs,
+        ref,
+        onMounted,
+        getCurrentInstance,
+      } = Vue;
+
+      const header = {
+        method: "GET",
+        headers: {
+          "Content-Type": "application/json",
+        },
+      };
+      
+      const app = createApp({
+        setup() {
+          const categoryData = reactive({
+            categoryLevel1: [],
+            categoryLevel2: [],
+          });
+
+          getCategoryList();
+        //   getCategorySubList();
+          function getCategoryList() {
+            fetch("http://localhost:3000/category/getCategoryList", {
+              ...header,
+            })
+            .then((response) => response.json())
+            .then((res) => {
+                const { data } = res;
+                categoryData.categoryLevel1 = data;
+            });
+          }
+
+          function getCategorySubList(id) {
+            fetch("http://localhost:3000/category/getCategorySubList?id="+ id, {
+              ...header,
+            })
+            .then((response) => response.json())
+            .then((res) => {
+                // console.log('res', res)
+                const { data } = res;
+                categoryData.categoryLevel2 = data;
+            });
+          }
+
+          return {
+            ...toRefs(categoryData),
+            getCategorySubList,
+          };
+        },
+      });
+
+      app.mount("#app");
+    </script>
+  </body>
+</html>

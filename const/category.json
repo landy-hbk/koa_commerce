@@ -1,0 +1,58 @@
+[
+    {
+        "id": 1,
+        "mall_category_name": "新鲜水果",
+        "image": null,
+        "type": 1,
+        "sort": 1,
+        "comment": null
+    },
+    {
+        "id": 2,
+        "mall_category_name": "潮流衣裤",
+        "image": null,
+        "type": 2,
+        "sort": 2,
+        "comment": null
+    },
+    {
+        "id": 3,
+        "mall_category_name": "美容护肤",
+        "image": null,
+        "type": 3,
+        "sort": 3,
+        "comment": null
+    },
+    {
+        "id": 4,
+        "mall_category_name": "中外名著",
+        "image": null,
+        "type": 4,
+        "sort": 4,
+        "comment": null
+    },
+    {
+        "id": 5,
+        "mall_category_name": "幼儿玩具",
+        "image": null,
+        "type": 5,
+        "sort": 5,
+        "comment": null
+    },
+    {
+        "id": 6,
+        "mall_category_name": "户外工具",
+        "image": null,
+        "type": 6,
+        "sort": 6,
+        "comment": null
+    },
+    {
+        "id": 7,
+        "mall_category_name": "食品饮料",
+        "image": null,
+        "type": 7,
+        "sort": 7,
+        "comment": null
+    }
+]

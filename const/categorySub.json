@@ -1,0 +1,51 @@
+[
+    {
+        "id": "10000001",
+        "mall_category_id": "1",
+        "mall_sub_name": "热带水果",
+        "comments": null,
+        "sort": 1
+    },
+    {
+        "id": "10000002",
+        "mall_category_id": "2",
+        "mall_sub_name": "优衣库",
+        "comments": null,
+        "sort": 1
+    },
+    {
+        "id": "10000003",
+        "mall_category_id": "3",
+        "mall_sub_name": "一叶子",
+        "comments": null,
+        "sort": 1
+    },
+    {
+        "id": "10000004",
+        "mall_category_id": "4",
+        "mall_sub_name": "中国小说",
+        "comments": null,
+        "sort": 1
+    },
+    {
+        "id": "10000005",
+        "mall_category_id": "5",
+        "mall_sub_name": "乐高系列",
+        "comments": null,
+        "sort": 1
+    },
+    {
+        "id": "10000006",
+        "mall_category_id": "6",
+        "mall_sub_name": "下雨用品",
+        "comments": null,
+        "sort": 1
+    },
+    {
+        "id": "10000007",
+        "mall_category_id": "7",
+        "mall_sub_name": "汽水新品",
+        "comments": null,
+        "sort": 1
+    }
+]

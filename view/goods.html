@@ -1,0 +1,77 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <script src="https://unpkg.com/vue@3.2.31/dist/vue.global.js"></script>
+    <title>Document</title>
+  </head>
+  <body>
+    <div id="app">
+        <div>
+            <image :src="goods.image1" />
+            <div>
+                {{goods.goods_name}}
+            </div>
+            <div>
+                价格： {{ goods.price }}
+            </div>
+        </div>
+
+      <!-- <div>name:  {{goods}}</div> -->
+    </div>
+
+    <script>
+      const header = {
+        method: "GET",
+        headers: {
+          "Content-Type": "application/json",
+        },
+      };
+      const id = "2045611111";
+      const { createApp, reactive, toRefs, ref, onMounted, getCurrentInstance } = Vue;
+
+      const app = createApp({
+        setup() {
+          const state = reactive({
+            ce: "1234",
+            jyPassword: "",
+            password: "",
+            goodsdetils: {},
+          });
+
+          let goodsdetils = reactive({
+            goods: {}
+          });
+
+          getGoodsDetails();
+
+          async function getGoodsDetails() {
+            await  fetch('http://localhost:3000/goods/getGoodsDetailsInfo?id='+id, {
+                ...header,
+
+            })
+            .then(response => response.json())
+            .then(res => {
+                if(res.code === 200) {
+                    goodsdetils.goods = res.data;
+
+                    console.log(goodsdetils.goods, 'goodsdetils---123')
+                }else {
+
+                }
+            })
+          }
+          
+          return {
+            ...toRefs(state),
+            ...toRefs(goodsdetils),
+            
+          };
+        },
+      });
+
+      app.mount("#app");
+    </script>
+  </body>
+</html>

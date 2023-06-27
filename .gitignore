@@ -1,0 +1,18 @@
+
+dist/
+deploy_versions/
+rn_temp/
+.temp/
+.rn_temp/
+node_modules/
+uni_modules/
+unpackage/
+.DS_Store
+
+yarn.lock
+
+# logs
+*.log
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
