@@ -54,5 +54,22 @@ router.get('/getGoodsDetailsInfo', async (ctx) => {
     })
 })
 
+// 获取商品列表
+router.post('/getGoodsList', async (ctx) => {
+    let page = ctx.request.body.page || 1;
+    let limit = ctx.request.body.limit || 8;
+    const start =(page - 1)*limit;
+    const Goods = mongoose.model('Goods');
+    console.log('goodsId', ctx.request.body)
+    // skip 从什么位置开始过滤
+    // limit 一次获取多少个
+    const result = await Goods.find().skip(start).limit(limit).exec()
+    ctx.body = {
+        code: 200,
+        message:  null,
+        data: result,
+    }
+})
+
 
 module.exports = router;

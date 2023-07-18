@@ -3,12 +3,6 @@ const mongoose = require('mongoose')
 
 let router = new Router();
 
-router.get('/', async (ctx) => {
-    ctx.req = {
-        name: 'ce'
-    }
-})
-
 router.post('/login', async (ctx) => {
     console.log(ctx.request.body)
     const userName = ctx.request.body.userName;

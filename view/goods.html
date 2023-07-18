@@ -45,7 +45,7 @@
           });
 
           getGoodsDetails();
-
+          getGoodsList();
           async function getGoodsDetails() {
             await  fetch('http://localhost:3000/goods/getGoodsDetailsInfo?id='+id, {
                 ...header,
@@ -62,7 +62,28 @@
                 }
             })
           }
-          
+
+          // 获取商品列表分页接口
+          async function getGoodsList() {
+            await  fetch('http://localhost:3000/goods/getGoodsList', {
+                ...header,
+                method: "POST",
+                body: JSON.stringify({
+                  page: 2,
+                  limit: 5,
+                })
+            })
+            .then(response => response.json())
+            .then(res => {
+                if(res.code === 200) {
+                
+                    console.log(res, 'getGoodsList---123')
+                }else {
+
+                }
+            })
+          }
+
           return {
             ...toRefs(state),
             ...toRefs(goodsdetils),

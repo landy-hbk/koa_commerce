@@ -1,13 +1,28 @@
 const Koa  = require('koa');
-const app = new Koa();
 const { connect, initSchemas } = require('./database/index');
 const mongoose = require('mongoose')
 const router = require('./router/index.js');
 const bodyParser = require('koa-bodyparser')
+const routers = require('koa-router')()
+const websocket = require('koa-websocket');
+
+
+const app = websocket(new Koa())
+
+
+app.ws.use(async (ctx) => {
+    // the websocket is added to the context as `ctx.websocket`.
+    ctx.websocket.send('我是服务器')
+   ctx.websocket.on('message', function(message) {
+     // do something
+     const msg = message.toString('utf-8')
+     console.log('客户端发来消息', msg)
+   });
+ });
 
 app.use(bodyParser());
-app.use(router.routes());
-app.use(router.allowedMethods());
+app.ws.use(router.routes()).use(router.allowedMethods());
+
 
 
 
@@ -35,9 +50,9 @@ app.use(router.allowedMethods());
     // console.log(User, 'User--------------')
 })()
 
-app.use(async ctx => {
-    ctx.body = 'hello Word in koa';
-})
+// app.use(async ctx => {
+//     ctx.body = 'hello Word in koa';
+// })
 
 app.listen(3000, () => {
     console.log('listen  start')
