@@ -6,9 +6,9 @@ const category = require('./category/index.js');
 
 let router = new Router();
 
-router.use('/user', user.routes())
+router.use('/api/user', user.routes())
 router.use('/view', view.routes())
-router.use('/goods', goods.routes())
-router.use('/category', category.routes())
+router.use('/api/goods', goods.routes())
+router.use('/api/category', category.routes())
 
 module.exports = router

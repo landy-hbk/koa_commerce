@@ -26,6 +26,8 @@
         method: "GET",
         headers: {
           "Content-Type": "application/json",
+          "Authorization": `Bearer ${localStorage.getItem("token")}`
+          // "authorization": localStorage.getItem("token")
         },
       };
       const id = "2045611111";
@@ -47,7 +49,7 @@
           getGoodsDetails();
           getGoodsList();
           async function getGoodsDetails() {
-            await  fetch('http://localhost:3000/goods/getGoodsDetailsInfo?id='+id, {
+            await  fetch('http://localhost:3000/api/goods/getGoodsDetailsInfo?id='+id, {
                 ...header,
 
             })
@@ -65,12 +67,14 @@
 
           // 获取商品列表分页接口
           async function getGoodsList() {
-            await  fetch('http://localhost:3000/goods/getGoodsList', {
+            const token = localStorage.getItem('token')
+            await  fetch('http://localhost:3000/api/goods/getGoodsList', {
                 ...header,
                 method: "POST",
                 body: JSON.stringify({
                   page: 2,
                   limit: 5,
+                  token,
                 })
             })
             .then(response => response.json())

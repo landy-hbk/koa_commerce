@@ -56,6 +56,7 @@ router.get('/getGoodsDetailsInfo', async (ctx) => {
 
 // 获取商品列表
 router.post('/getGoodsList', async (ctx) => {
+    console.log('cccc:', ctx.state.user)
     let page = ctx.request.body.page || 1;
     let limit = ctx.request.body.limit || 8;
     const start =(page - 1)*limit;

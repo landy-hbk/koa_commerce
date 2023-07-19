@@ -6,6 +6,7 @@ let router = new Router();
 
 // 返回静态html
 router.get('/login', async (ctx) => {
+    console.log('/login')
     ctx.type = "html";
     const url = path.resolve(__dirname, '../../view/login.html')
 

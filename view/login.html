@@ -28,7 +28,7 @@
         };
 
         function login(data) {
-            fetch('http://localhost:3000/user/login', {
+            fetch('http://localhost:3000/api/user/login', {
                 ...header,
                 body: JSON.stringify({
                     userName: data.userName || '张三',
@@ -40,6 +40,7 @@
                 console.log(res, 'res---123')
                 if(res.code === 200) {
                     alert('登录成功1')
+                    localStorage.setItem('token', res.data.token)
                 }else {
                     alert('登录失败2')
                 }
