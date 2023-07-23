@@ -13,6 +13,7 @@ const userSchema = new Schema({
         type: String
     },
     passWord: String,
+    avator: String,
     hashPassword: String,
     createAt: {
         type: Date,

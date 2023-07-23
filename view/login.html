@@ -39,8 +39,9 @@
             .then(res => {
                 console.log(res, 'res---123')
                 if(res.code === 200) {
-                    alert('登录成功1')
+                    alert('登录成功12')
                     localStorage.setItem('token', res.data.token)
+                    localStorage.setItem('user', JSON.stringify({ uid: res.data.uid }))
                 }else {
                     alert('登录失败2')
                 }

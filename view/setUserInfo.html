@@ -1,0 +1,159 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <script src="https://unpkg.com/vue@3.2.31/dist/vue.global.js"></script>
+    <title>Document</title>
+    <style>
+      .form {
+        text-align: center;
+      }
+      .form-item {
+        display: flex;
+        justify-content: center;
+      }
+      .label {
+        margin-right: 10px;
+      }
+      .file-img {
+        width: 100px;
+        height: 100px;
+        border: 1px solid #eee;
+      }
+      .file-img[src=""] {
+        opacity: 0;
+      }
+    </style>
+  </head>
+  <body>
+    <div id="app">
+      <div class="form">
+        <div class="form-item">
+          <span class="label">用户名</span>
+          <div class="input-warrper">
+            <input type="text" class="form-input" v-model="user.userName" />
+          </div>
+        </div>
+        <div class="form-item">
+          <span class="label">用户头像</span>
+          <div class="input-warrper">
+            <image
+              :src="'http://localhost:3000/'+user.avator"
+              class="file-img"
+            />
+            <input
+              type="file"
+              multiple
+              id="file"
+              accept="image/*"
+              @change="fileChange"
+            />
+          </div>
+        </div>
+        <div>
+            <button type="button" @click="submit()">提交</button>
+        </div>
+      </div>
+    </div>
+
+    <script>
+      const header = {
+        method: "POST",
+        headers: {
+          // 'Content-Type': 'multipart/form-data',
+          Authorization: `Bearer ${localStorage.getItem("token")}`,
+          // "authorization": localStorage.getItem("token")
+        },
+      };
+      const id = "2045611111";
+      const {
+        createApp,
+        reactive,
+        toRefs,
+        ref,
+        onMounted,
+        getCurrentInstance,
+      } = Vue;
+
+      const app = createApp({
+        setup() {
+          const state = reactive({
+            ce: "1234",
+            user: {},
+          });
+
+          async function getUserInfo() {
+            const uid = JSON.parse(localStorage.getItem("user") || "{}").uid;
+            // console.log(uid, 'uid')
+            await fetch("http://localhost:3000/api/user/userInfo?uid=" + uid, {
+              ...header,
+              headers: {
+                "Content-Type": "application/json",
+                // 'Content-Type': 'multipart/form-data',
+                Authorization: `Bearer ${localStorage.getItem("token")}`,
+              },
+              method: "GET",
+            })
+              .then((response) => response.json())
+              .then((res) => {
+                // console.log(res, 'res')
+                state.user = res.data;
+              });
+          }
+          getUserInfo();
+
+          const fileChange = async () => {
+            const file = document.querySelector("#file").files[0];
+            const formDate = new FormData();
+            formDate.append("file", file);
+            console.log(file, " ce1");
+            await fetch("http://localhost:3000/api/upload/img", {
+              ...header,
+              body: formDate,
+            })
+              .then((response) => response.json())
+              .then((res) => {
+                console.log("图片上传成功", res);
+                state.user.avator = res.data.path;
+              });
+          };
+
+          // 提交到数据库
+          const submit = async() => {
+            const { user } = state;
+            if(user.userName ) {
+                await fetch("http://localhost:3000/api/user/update", {
+                    method: "POST",
+                    headers: {
+                        'Content-Type': 'application/json',
+                        Authorization: `Bearer ${localStorage.getItem("token")}`,
+                    },
+                    body: JSON.stringify({
+                        ...user,
+                        uid: JSON.parse(localStorage.getItem("user") || "{}").uid,
+                    }),
+                })
+                .then((response) => response.json())
+                .then((res) => {
+                    if(res.code === 200) {
+                        alert('修改成功')
+                    }
+                })
+            }
+
+           
+          }
+
+          return {
+            ...toRefs(state),
+            fileChange,
+            submit,
+          };
+        },
+      });
+
+      app.mount("#app");
+    </script>
+  </body>
+</html>

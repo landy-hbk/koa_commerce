@@ -13,6 +13,7 @@ router.post('/login', async (ctx) => {
 
 
     await User.findOne({ userName: userName }).exec().then(async result => {
+        // console.log('result', result)
         // 如果用户名存在
         if(result) {
             let newUser = new User();
@@ -25,7 +26,8 @@ router.post('/login', async (ctx) => {
                         code: 200,
                         message: isMatch,
                         data: {
-                            token: token
+                            token: token,
+                            uid: result._id
                         }
                     }
                 }else {
@@ -52,20 +54,52 @@ router.post('/login', async (ctx) => {
     // ctx.body = ctx.request.body;
 })
 
+router.post('/update', async (ctx) => {
+    // 引入user模型
+    const User  = mongoose.model('User');
+    const uid  = ctx.request.body.uid || '';
+    const avator  = ctx.request.body.avator || '';
+    const userName = ctx.request.body.userName || '';
+    console.log( ctx.request.body, 'update')
+    await User.findOneAndUpdate({ _id: uid }, {
+        avator: avator,
+        userName: userName,
+    },{ new: true }).then(result => {
+        if(result) {
+            ctx.body = {
+                code: 200,
+                message: '',
+                data: {}
+            }
+        }else {
+            ctx.body = {
+                code: 500,
+                message: '',
+                data: {}
+            }
+        }
+        console.log(result, 'result')
+    })
+
+    // ctx.body = ctx.request.body;
+})
+
 router.get('/userInfo', async (ctx) => {
     // 引入user模型
     const User  = mongoose.model('User');
+    const uid  = ctx.request.query.uid || '';
     // console.log( userName, User, 'User')
-
-
-    await User.findOne({ userName: "test3" }).exec().then(async result => {
+    await User.findOne({ _id: uid }).exec().then(async result => {
         // 如果用户名存在
         if(result) {
+            const { avator,userName } = result
+            // console.log(result)
             ctx.body = {
                 code: 200,
                 message: "",
                 data: {
-                    userName: result.userName
+                    avator: avator || '',
+                    userName,
                 }
             }
         }else {
