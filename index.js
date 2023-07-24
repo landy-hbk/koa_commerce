@@ -5,10 +5,12 @@ const router = require("./router/index.js"); // 路由
 const bodyParser = require("koa-bodyparser"); // requeast请求
 // const routers = require("koa-router")(); // 路由
 const websocket = require("koa-websocket"); // socket
-var jwt = require("koa-jwt"); // token验证
+const jwt = require("koa-jwt"); // token验证
+const jwtToken = require('jsonwebtoken');
 const app = websocket(new Koa());
 const { jwtWhiteList } = require("./const/jwtWhiteList"); // token白名单
 const koaStatic = require("koa-static"); // 静态目录
+const koa2cors = require("koa2-cors"); // 配置跨域
 
 // 建立socket连接
 app.ws.use(async (ctx) => {
@@ -25,10 +27,40 @@ app.ws.use(async (ctx) => {
 // 如果token没有经过验证中间件会返回401错误，可以通过下面的中间件自定义处理这个错误
 // Custom 401 handling if you don't want to expose koa-jwt errors to users
 app.use(function (ctx, next) {
+  console.log("ce0", ctx.header.authorization)
+  if (ctx.header && ctx.header.authorization) {
+    const parts = ctx.header.authorization.split(" ");
+    if (parts.length === 2) {
+      //取出token
+      const scheme = parts[0];
+      const token = parts[1];
+      if (/^Bearer$/i.test(scheme)) {
+        try {
+          console.log("ce1")
+          const decoded = jwtToken.verify(token, 'secret',{ complete: true });
+          // iat: 签发时间  exp: 过期时间
+          const { iat, exp, userName  } = decoded.payload;
+          const nowTime = new Date().getTime()/1000;
+          console.log("ce2", decoded, typeof iat, (exp - nowTime)/60 )
+          // 当前事件离过期时间还剩20分钟时候更新token 如果过期就走401
+          if(decoded && 0 < (exp - nowTime)/60 < 20) {
+            console.log('更新token')
+            const newToken = jwtToken.sign({userName: userName}, 'secret', { expiresIn: '2h' });
+            ctx.res.setHeader('Authorization', newToken)
+          }
+          
+        } catch (error) {
+          console.log("ce3")
+          //token过期 
+        }
+      }
+    }
+  }
+
   return next().catch((err) => {
-    if (401 == err.status) {
+    if (401 == err.status || err.status === 301) {
       ctx.status = 401;
-      ctx.body = "token验证失败！！！！";
+      ctx.body = "token已经失效！！！！";
       // ctx.body = {error: err.originalError ? err.originalError.message : err.message};
     } else {
       throw err;
@@ -36,8 +68,7 @@ app.use(function (ctx, next) {
   });
 });
 
-
-console.log(jwtWhiteList, "jwtWhiteList");
+app.use(koa2cors());
 app.use(bodyParser());
 app.use(koaStatic("./"));
 // 登录注册接口不验证'/api/login','/api/register'
@@ -48,30 +79,7 @@ app.use(router.routes()).use(router.allowedMethods());
 (async () => {
   await connect();
   await initSchemas();
-
-  const User = mongoose.model("User");
-  // const ce =  User.findOne({ userName: 'test3' }).exec().then(res => {
-  //     console.log(res, 'res--------------')
-  // })
-
-  // console.log(ce, 'ce--------------')
-  // let oneUser = new User({
-  //     userName: 'test3',
-  //     passWord:  'test2223'
-  // });
-
-  // oneUser.save().then(() => {
-  //     console.log('插入成功')
-  // })
-
-  // let user = await User.findOne({}).exec()
-
-  // console.log(User, 'User--------------')
 })();
-
-// app.use(async ctx => {
-//     ctx.body = 'hello Word in koa';
-// })
 
 app.listen(3000, () => {
   console.log("listen  start");
