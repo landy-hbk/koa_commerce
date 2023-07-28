@@ -78,7 +78,7 @@ router.post('/update', async (ctx) => {
                 data: {}
             }
         }
-        console.log(result, 'result')
+        // console.log(result, 'result')
     })
 
     // ctx.body = ctx.request.body;
@@ -115,6 +115,27 @@ router.get('/userInfo', async (ctx) => {
             message: err,
         }
     })
+
+    // ctx.body = ctx.request.body;
+})
+
+router.get('/list', async (ctx) => {
+    // 引入user模型
+    const User  = mongoose.model('User');
+    const uid  = ctx.request.query.uid || '';
+    // console.log( userName, User, 'User')
+     const result = await User.find({}).skip(0).limit(10).exec()
+
+     console.log(result, 'result')
+     ctx.body = {
+        code: 200,
+        data: result,
+        page: {
+            pageNum: 1,
+            limit: 10,
+            total: 10,
+        }
+     }
 
     // ctx.body = ctx.request.body;
 })

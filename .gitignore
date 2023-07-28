@@ -8,7 +8,7 @@ node_modules/
 uni_modules/
 unpackage/
 .DS_Store
-
+static/
 yarn.lock
 
 # logs

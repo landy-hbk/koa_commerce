@@ -27,7 +27,7 @@ app.ws.use(async (ctx) => {
 // 如果token没有经过验证中间件会返回401错误，可以通过下面的中间件自定义处理这个错误
 // Custom 401 handling if you don't want to expose koa-jwt errors to users
 app.use(function (ctx, next) {
-  console.log("ce0", ctx.header.authorization)
+  // console.log("ce0", ctx.header.authorization)
   if (ctx.header && ctx.header.authorization) {
     const parts = ctx.header.authorization.split(" ");
     if (parts.length === 2) {
@@ -36,16 +36,16 @@ app.use(function (ctx, next) {
       const token = parts[1];
       if (/^Bearer$/i.test(scheme)) {
         try {
-          console.log("ce1")
           const decoded = jwtToken.verify(token, 'secret',{ complete: true });
           // iat: 签发时间  exp: 过期时间
           const { iat, exp, userName  } = decoded.payload;
           const nowTime = new Date().getTime()/1000;
-          console.log("ce2", decoded, typeof iat, (exp - nowTime)/60 )
-          // 当前事件离过期时间还剩20分钟时候更新token 如果过期就走401
-          if(decoded && 0 < (exp - nowTime)/60 < 20) {
-            console.log('更新token')
+          const lastTime  = (exp - nowTime)/60;
+          // 当前事件离过期时间还剩一半的时候更新token 如果过期就走401
+          if(decoded && 0 < lastTime &&  lastTime< ((exp-iat)/60)/2) {
+            // console.log('更新token0')
             const newToken = jwtToken.sign({userName: userName}, 'secret', { expiresIn: '2h' });
+            // console.log('更新token1', newToken)
             ctx.res.setHeader('Authorization', newToken)
           }
           
@@ -60,7 +60,10 @@ app.use(function (ctx, next) {
   return next().catch((err) => {
     if (401 == err.status || err.status === 301) {
       ctx.status = 401;
-      ctx.body = "token已经失效！！！！";
+      ctx.body = {
+        code: err.status,
+        message: "token已经失效！！！！"
+      };
       // ctx.body = {error: err.originalError ? err.originalError.message : err.message};
     } else {
       throw err;
@@ -68,7 +71,12 @@ app.use(function (ctx, next) {
   });
 });
 
-app.use(koa2cors());
+app.use(koa2cors({
+    origin: "*",
+    maxAge: 5,
+    allowMethods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS'],
+    allowHeaders: ['Content-Type', 'Authorization', 'Accept'],
+}));
 app.use(bodyParser());
 app.use(koaStatic("./"));
 // 登录注册接口不验证'/api/login','/api/register'

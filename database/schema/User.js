@@ -15,6 +15,10 @@ const userSchema = new Schema({
     passWord: String,
     avator: String,
     hashPassword: String,
+    nikeName: String,
+    address: String,
+    isBlack: Boolean,
+    sex: String,
     createAt: {
         type: Date,
         default: Date.now(),

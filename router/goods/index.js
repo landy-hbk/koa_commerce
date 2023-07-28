@@ -39,8 +39,9 @@ router.get('/insertAllGoodsInfo', async (ctx) => {
 router.get('/getGoodsDetailsInfo', async (ctx) => {
     let goodsId  = ctx.request.query.id;
     const Goods = mongoose.model('Goods');
-    console.log('goodsId', goodsId, ctx.request.query)
-    await Goods.findOne({ id: goodsId }).exec().then(result => {
+    // console.log('goodsId', goodsId, ctx.request.query)
+    await Goods.findOne({ _id: goodsId }).exec().then(result => {
+        console.log(result, 'result')
         ctx.body = {
             code: 200,
             message:  null,
@@ -64,12 +65,127 @@ router.post('/getGoodsList', async (ctx) => {
     console.log('goodsId', ctx.request.body)
     // skip 从什么位置开始过滤
     // limit 一次获取多少个
-    const result = await Goods.find().skip(start).limit(limit).exec()
+    // console.log(Goods.count({}), 'count')
+    
+    // const result = await Goods.find().skip(start).limit(limit).exec()
+
+    const result =  await Goods.find().exec()
+
+    // console.log('result', result.slice(0,5))
+
     ctx.body = {
         code: 200,
         message:  null,
-        data: result,
+        data: result.slice((page-1)*limit, page*limit),
+        page: {
+            page: page,
+            limit,
+            total: result.length ,
+            lastPage: parseInt(result.length / limit)
+        }
     }
+})
+
+// 新增商品
+router.put('/goodlist', async (ctx) => {
+    // console.log(ctx.request.body,"body")
+    const formData = ctx.request.body  || {};
+    const Goods = mongoose.model('Goods');
+    const goods = {
+        goods_name: formData.goods_name,
+        price: formData.price,
+        present_price: formData.present_price,
+        sale_count: formData.sale_count,
+        is_delete: false,
+        avator: formData.avator,
+        imgs: formData.imgs,
+    }
+    let newGoods = new Goods(goods);
+
+    await newGoods.save().then(res => {
+        // console.log('保存成功！------', res)
+        ctx.body =   {
+            code: 200,
+            message: "添加成功"
+        }
+    }).catch(err => {
+    //    console.log('保存失败！------', err)
+       ctx.body = {
+            code: 500,
+            message: "添加失败"+ err
+        }
+    })
+})
+
+// 修改商品
+router.post('/goodlist', async (ctx) => { 
+    const formData = ctx.request.body  || {};
+    const goods_id = ctx.request.body.goods_id
+
+    if(!goods_id) {
+        ctx.body = {
+            code: 500,
+            message: "商品id不能为空"
+        }
+
+        return ;
+    }
+
+    const goods = {
+        goods_name: formData.goods_name,
+        price: formData.price,
+        present_price: formData.present_price,
+        sale_count: formData.sale_count,
+        avator: formData.avator,
+        imgs: formData.imgs,
+        updateTime: new Date(),
+    }
+
+    console.log(goods, 'goods')
+    const Goods = mongoose.model('Goods');
+
+    await Goods.findOneAndUpdate({ _id: goods_id }, goods, { new: true }).then(result => {
+        if(result) {
+            ctx.body = {
+                code: 200,
+                message: '修改成功'
+            }
+        }else {
+            ctx.body = {
+                code: 500,
+                message: '修改失败'
+            }
+        }
+    })
+})
+// 删除商品
+router.delete('/goodlist/:id', async (ctx) => { 
+    const goods_id = ctx.params.id  || '';
+    const Goods = mongoose.model('Goods');
+
+    if(!goods_id) {
+        ctx.body = {
+            code: 500,
+            message: '商品id不能为空！'
+        }
+    }
+    console.log(goods_id, 'goods_id', ctx.params)
+    await Goods.findOneAndRemove({ _id: goods_id }).then(result => {
+        console.log(result, 'result', typeof result)
+        if(result) {
+            ctx.body = {
+                code: 200,
+                message: '删除成功'
+            }
+        }
+    }).catch(err => {
+        ctx.body = {
+            code: 500,
+            message: err
+        }
+    })
+    
+    
 })
 
 
