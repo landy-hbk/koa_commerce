@@ -184,9 +184,49 @@ router.delete('/goodlist/:id', async (ctx) => {
             message: err
         }
     })
-    
-    
 })
+
+// 批量上架商品
+router.post('/goodlist/batch', async (ctx) => {
+    const Goods = mongoose.model('Goods');
+    let { good_list = '', type } = ctx.request.body
+    good_list = good_list.split(',') || []; 
+    let bulkOps = [];
+    console.log(good_list, type, 'batch')
+    if(good_list.length <= 0) {
+        ctx.body = {
+            code: 500,
+            message: '商品id数组不能为空'
+        }
+    }
+
+    good_list.forEach(item => {
+        let  updateSql = {
+            'updateOne': {
+                'filter':  { _id:  item },
+                'update':  { is_delete: type === 'openUp' ? 1 : 0,  'updateTime': new Date() },
+                'upsert': true
+            }
+        }
+
+        bulkOps.push(updateSql)
+    })
+
+    if(bulkOps.length > 0) {
+       await Goods.bulkWrite(bulkOps).then(bulkWriteResult => {
+            ctx.body = {
+                code: 200,
+                message: '批量更新已完成'
+            }
+       }).catch(err => {
+            ctx.body = {
+                code: 500,
+                message: err
+            }
+       })
+    }
+
+}) 
 
 
 module.exports = router;

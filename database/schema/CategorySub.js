@@ -3,16 +3,18 @@ const Schema = mongoose.Schema;
 
 const categorySubShema = new Schema({
     id: {
-        unique: true,
-        type: String,
+        type: Number,
     },
     mall_category_id: {
         type: String,
     },
+    mall_id: {
+        type: Number,
+    },
     mall_sub_name: {
         type: String,
     },
-    comments: {
+    image: {
         type: String,
     },
     sort: {

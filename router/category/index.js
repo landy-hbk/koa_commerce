@@ -6,7 +6,7 @@ const { default: mongoose } = require('mongoose');
 let router = new Router();
 
 // 批量导入商品一级分类
-router.get('/insertAllCategory', async (ctx) => {
+router.get('/insertAllCategory/batchFile', async (ctx) => {
    fs.readFile('./const/category.json', 'utf8', function(err, data) {
      data = JSON.parse(data);
      let saveCount = 0;
@@ -28,6 +28,41 @@ router.get('/insertAllCategory', async (ctx) => {
    })
 
    ctx.body = '开始导入分类'
+})
+
+router.put('/insertCategory', async (ctx) => {
+    const { mall_category_name, sort, id } = ctx.request.body;
+    console.log( ctx.request.body, 'insertCategory')
+    const Category = mongoose.model('Category'); 
+
+    await Category.findOne({id: id}).then( async result => {
+        if(!result) {
+            const newCategory = new Category({
+                mall_category_name: mall_category_name,
+                sort: sort,
+                id: id,
+            });
+            
+            await newCategory.save().then(res => {
+                console.log('保存成功------------', res)
+                ctx.body = {
+                    code: 200,
+                    data: res,
+                }
+            }).catch(err => {
+                console.log('保存失败------------', err)
+                ctx.body = {
+                    code: 500,
+                    data: err,
+                }
+            })
+        }else {
+            ctx.body = {
+                code: 500,
+                data: "存在重复的id键值",
+            }
+        }
+    })
 })
 
 // 批量导入商品二级分类
