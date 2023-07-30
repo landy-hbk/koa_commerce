@@ -3,15 +3,18 @@ const Schema = mongoose.Schema;
 
 const categorySubShema = new Schema({
     id: {
+        unique: true,
         type: Number,
     },
     mall_category_id: {
         type: String,
     },
-    mall_id: {
-        type: Number,
+    category_id: {
+        type: Schema.ObjectId,
+        require: true,
+        ref: "Category"
     },
-    mall_sub_name: {
+    mall_category_name: {
         type: String,
     },
     image: {
@@ -20,6 +23,10 @@ const categorySubShema = new Schema({
     sort: {
         type: Number,
     },
+    level: {
+        type: String,
+        default: 'level2'
+    },
 }) 
 
-mongoose.model("CategorySub", categorySubShema)
+mongoose.model("CategorySub", categorySubShema)   
