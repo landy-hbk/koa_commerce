@@ -99,6 +99,7 @@ router.put('/goodlist', async (ctx) => {
         is_delete: false,
         avator: formData.avator,
         imgs: formData.imgs,
+        categorys: formData.categorys,
     }
     let newGoods = new Goods(goods);
 
@@ -138,6 +139,7 @@ router.post('/goodlist', async (ctx) => {
         sale_count: formData.sale_count,
         avator: formData.avator,
         imgs: formData.imgs,
+        categorys: formData.categorys,
         updateTime: new Date(),
     }
 

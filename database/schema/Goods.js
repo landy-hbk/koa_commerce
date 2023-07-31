@@ -19,6 +19,10 @@ const goodsSchema = new Schema({
     "image_6": String,
     // 是否上架
     "is_delete": Number,
+    categorys: {
+        type: [Schema.Types.Number || Schema.Types.String],
+        default: null,
+    },
     // 子类别
     "sub_id": String,
     // 商品id

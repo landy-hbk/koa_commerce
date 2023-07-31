@@ -149,7 +149,7 @@ router.get("/getCategoryAllList", async (ctx) => {
         foreignField: "category_id",
         as: "children",
       },
-    },
+    }
   ]);
 
   if (result) {
@@ -200,9 +200,7 @@ const categoryUpdateMany = async (ctx, type) => {
         };
       }
     });
-  }
-
-  if (type === "update") {
+  }else if (type === "update") {
     await Category.findOneAndUpdate(query, {
       $set: {
         ...newCategoryObj,
@@ -220,9 +218,7 @@ const categoryUpdateMany = async (ctx, type) => {
           data: err,
         };
       });
-  }
-
-  if (type === "delete") {
+  }else if (type === "delete") {
     const id = ctx.params.id || "";
     if (!id) {
       ctx.body = {
@@ -277,8 +273,7 @@ const categorySubsUpdateMany = async (ctx, type) => {
         };
       }
     });
-  }
-  if (type === "add") {
+  }else if (type === "add") {
     newCategoryObj.id = id;
     newCategoryObj.category_id = category_id;
     await CategorySub.findOne(query).then(async (result) => {
@@ -307,9 +302,7 @@ const categorySubsUpdateMany = async (ctx, type) => {
         };
       }
     });
-  }
-
-  if (type === "update") {
+  }else if (type === "update") {
     await CategorySub.findOneAndUpdate(query, {
       $set: {
         ...newCategoryObj,
@@ -327,9 +320,7 @@ const categorySubsUpdateMany = async (ctx, type) => {
           data: err,
         };
       });
-  }
-
-  if (type === "delete") {
+  }else if (type === "delete") {
     const id = ctx.params.id || "";
     if (!id) {
       ctx.body = {
