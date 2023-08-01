@@ -6,6 +6,7 @@ const category = require('./category/index.js');
 const upload = require('./upload/index.js')
 const rule = require('./rule/index.js')
 const menu = require('./menu/index.js')
+const role = require('./role/index.js')
 
 let router = new Router();
 
@@ -16,5 +17,7 @@ router.use('/api/category', category.routes())
 router.use('/api/upload', upload.routes())
 router.use('/api/rule', rule.routes())
 router.use('/api/menu', menu.routes())
+router.use('/api/role', role.routes())
+
 
 module.exports = router

@@ -2,32 +2,29 @@ const mongoose = require('mongoose');
 const Schema = mongoose.Schema;
 const Counter = require('./Counter')
 
-const MenuSchema = new Schema({
-    menu_id: {
+const RoleSchema = new Schema({
+    // 自增id
+    role_id: {
         unique: true,
         type: Number,
     },
-    menu_name: {
+    // 角色名称
+    role_name: {
         type: String,
         require: true,
     },
-    menu_path: {
-        type: String,
-        require: true,
-        default: '',
-    },
-    component: {
+    // 描述
+    describe: {
         type: String,
         default: '',
     },
-    parent_id: {
-        type: Number,
+    role_trees: {
+        type: [Schema.Types.Mixed],
+        default: null,
     },
-    parent_ids_string: {
-        type: String,
-    },
-    sort: {
+    status: {
         type: Number,
+        default: 1,
     },
     createTime: {
         type: Date,
@@ -40,18 +37,18 @@ const MenuSchema = new Schema({
 })
 
 
-MenuSchema.pre("save", async function (next) {
+RoleSchema.pre("save", async function (next) {
     const role = this;
-    if (!role.isNew || role.menu_id) {
+    if (!role.isNew || role.role_id) {
       return next();
     }
     try {
-      if (!role.menu_id) {
-        role.menu_id = await Counter.getNextSequenceValue("menu_id"); // rid是你需要自增的属性
+      if (!role.role_id) {
+        role.role_id = await Counter.getNextSequenceValue("role_id"); // rid是你需要自增的属性
       }
     } catch (err) {
       next(err);
     }
 });
 
-mongoose.model('Menu', MenuSchema) 
+mongoose.model('Role', RoleSchema) 
