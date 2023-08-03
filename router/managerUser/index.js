@@ -30,7 +30,10 @@ router.post("/login", async (ctx) => {
 								message: isMatch,
 								data: {
 									token: token,
-									uid: result._id,
+									userId: result._id,
+									userName: result.userName,
+									nikeName: result.nikeName,
+									sex: result.sex,
 								},
 							};
 						} else {
@@ -71,6 +74,58 @@ router.put("/managerUserList", async (ctx) => {
 // 删除数据
 router.delete("/managerUserList/:id", async (ctx) => {
 	await managerUserSQL(ctx, "delete");
+});
+// 获取用户权限信息
+router.get("/managerUserRoleInfo", async (ctx) => {
+	const { id } = ctx.request.query;
+	const ManagerUser = mongoose.model("ManagerUser");
+	const Menu = mongoose.model("Menu")
+
+	const result = await  ManagerUser.aggregate([
+		{
+			$lookup: {
+                from: 'roles', // 需要数据所在的表
+                localField: "role_id",  // 主表关联字段
+                foreignField: "_id", // 查询表关联主表字段
+                as: "roleList" // 导出字段名
+            }
+		},
+		{
+			$match: {
+				_id: new  mongoose.Types.ObjectId(id)
+			}
+		}
+	])
+
+	
+
+	console.log(result, 'result')
+
+	if(result) {
+		let { roleList=[] } = result.length > 0 ? result[0] : {};
+		// console.log(roleList, 'roleList')
+		const data = roleList.length > 0 && roleList[0] || [];
+		console.log(data, 'data')
+		const role_trees = data.role_trees.map(v => v._id);
+		console.log(role_trees, 'role_trees')
+		const menuList = await Menu.find({
+			_id: {
+				$in: role_trees
+			}
+		})
+		
+		console.log(menuList, 'menuList----------------')
+		ctx.body = {
+			code: 200,
+			data: result,
+			menuList: menuList,
+		}
+	}else {
+		ctx.body = {
+			code: 500,
+			data: result
+		}
+	}
 });
 
 const managerUserSQL = async (ctx, type) => {
