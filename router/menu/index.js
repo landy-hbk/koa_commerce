@@ -1,6 +1,7 @@
 const Router = require("koa-router");
 const { default: mongoose } = require("mongoose");
 let router = new Router();
+const Menu = require('../../database/schema/Menu')
 
 router.get("/menuList", async (ctx) => {
 	await menuSQL(ctx, "query");
@@ -29,7 +30,7 @@ const menuSQL = async (ctx, type) => {
 		parent_id,
 	};
 
-	const Menu = mongoose.model("Menu");
+	// const Menu = mongoose.model("Menu");
 
 	if (type === "query") {
 		const { menu_id } = ctx.request.query;

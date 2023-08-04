@@ -54,4 +54,4 @@ MenuSchema.pre("save", async function (next) {
     }
 });
 
-mongoose.model('Menu', MenuSchema) 
+module.exports = mongoose.model('Menu', MenuSchema) 

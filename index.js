@@ -7,6 +7,12 @@ const bodyParser = require("koa-bodyparser"); // requeast请求
 const websocket = require("koa-websocket"); // socket
 const jwt = require("koa-jwt"); // token验证
 const jwtToken = require('jsonwebtoken');
+
+(async () => {
+  await connect();
+  initSchemas();
+})();
+
 const app = websocket(new Koa());
 const { jwtWhiteList } = require("./const/jwtWhiteList"); // token白名单
 const koaStatic = require("koa-static"); // 静态目录
@@ -22,6 +28,7 @@ app.ws.use(async (ctx) => {
     console.log("客户端发来消息", msg);
   });
 });
+
 
 // 自定义401错误 start 【可以不要，必须写在前面；洋葱模型，发生错误后是不会继续往下执行的】
 // 如果token没有经过验证中间件会返回401错误，可以通过下面的中间件自定义处理这个错误
@@ -84,10 +91,6 @@ app.use(koaStatic("./"));
 app.use(jwt({ secret: "secret" }).unless({ path: jwtWhiteList }));
 app.use(router.routes()).use(router.allowedMethods());
 
-(async () => {
-  await connect();
-  await initSchemas();
-})();
 
 app.listen(3000, () => {
   console.log("listen  start");

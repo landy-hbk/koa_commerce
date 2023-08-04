@@ -2,13 +2,14 @@ const Router  = require('koa-router');
 const mongoose = require('mongoose')
 var jwt = require('jsonwebtoken');
 let router = new Router();
+const User = require('../../database/schema/User')
 
 router.post('/login', async (ctx) => {
     const userName = ctx.request.body.userName;
     const passWord = ctx.request.body.passWord;
 
     // 引入user模型
-    const User  = mongoose.model('User');
+    // const User  = mongoose.model('User');
     // console.log( userName, User, 'User')
 
 
@@ -56,7 +57,7 @@ router.post('/login', async (ctx) => {
 
 router.post('/update', async (ctx) => {
     // 引入user模型
-    const User  = mongoose.model('User');
+    // const User  = mongoose.model('User');
     const uid  = ctx.request.body.uid || '';
     const avator  = ctx.request.body.avator || '';
     const userName = ctx.request.body.userName || '';
@@ -86,7 +87,7 @@ router.post('/update', async (ctx) => {
 
 router.get('/userInfo', async (ctx) => {
     // 引入user模型
-    const User  = mongoose.model('User');
+    // const User  = mongoose.model('User');
     const uid  = ctx.request.query.uid || '';
     // console.log( userName, User, 'User')
     await User.findOne({ _id: uid }).exec().then(async result => {
@@ -121,7 +122,7 @@ router.get('/userInfo', async (ctx) => {
 
 router.get('/list', async (ctx) => {
     // 引入user模型
-    const User  = mongoose.model('User');
+    // const User  = mongoose.model('User');
     const uid  = ctx.request.query.uid || '';
     // console.log( userName, User, 'User')
      const result = await User.find({}).skip(0).limit(10).exec()

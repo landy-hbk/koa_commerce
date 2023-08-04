@@ -3,12 +3,15 @@ const mongoose = require("mongoose");
 var jwt = require("jsonwebtoken");
 let router = new Router();
 
+const ManagerUser = require('../../database/schema/ManagerUser')
+const Menu = require('../../database/schema/Menu')
+
 router.post("/login", async (ctx) => {
 	const userName = ctx.request.body.userName;
 	const passWord = ctx.request.body.passWord;
 
 	// 引入user模型
-	const ManagerUser = mongoose.model("ManagerUser");
+	// const ManagerUser = mongoose.model("ManagerUser");
 
 	await ManagerUser.findOne({ userName: userName })
 		.exec()
@@ -78,8 +81,8 @@ router.delete("/managerUserList/:id", async (ctx) => {
 // 获取用户权限信息
 router.get("/managerUserRoleInfo", async (ctx) => {
 	const { id } = ctx.request.query;
-	const ManagerUser = mongoose.model("ManagerUser");
-	const Menu = mongoose.model("Menu")
+	// const ManagerUser = mongoose.model("ManagerUser");
+	// const Menu = mongoose.model("Menu")
 
 	const result = await  ManagerUser.aggregate([
 		{
@@ -141,7 +144,7 @@ const managerUserSQL = async (ctx, type) => {
 		notes,
 	};
 
-	const ManagerUser = mongoose.model("ManagerUser");
+	// const ManagerUser = mongoose.model("ManagerUser");
 
 	if (type === "query") {
 		const { id } = ctx.request.query;

@@ -91,4 +91,4 @@ ManagerUserSchema.methods = {
     }
 }
 // 发布模型
-mongoose.model('ManagerUser', ManagerUserSchema)
+module.exports = mongoose.model('ManagerUser', ManagerUserSchema)

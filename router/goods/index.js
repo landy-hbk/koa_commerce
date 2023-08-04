@@ -4,12 +4,14 @@ const fs = require('fs');
 const mongoose = require('mongoose');
 let router = new Router();
 
+const Goods = require('../../database/schema/Goods')
+
 // 批量添加商品信息
 router.get('/insertAllGoodsInfo', async (ctx) => {
     fs.readFile('./const/goods.json', 'utf-8', function(err, data) {
         data = JSON.parse(data);
         let saveCount = 0;
-        const Goods = mongoose.model('Goods');
+        // const Goods = mongoose.model('Goods');
 
         data.map( async (v, k) => {
             // 防止提交重复商品
@@ -38,7 +40,7 @@ router.get('/insertAllGoodsInfo', async (ctx) => {
 // 返回单个商品详情
 router.get('/getGoodsDetailsInfo', async (ctx) => {
     let goodsId  = ctx.request.query.id;
-    const Goods = mongoose.model('Goods');
+    // const Goods = mongoose.model('Goods');
     // console.log('goodsId', goodsId, ctx.request.query)
     await Goods.findOne({ _id: goodsId }).exec().then(result => {
         console.log(result, 'result')
@@ -61,7 +63,7 @@ router.post('/getGoodsList', async (ctx) => {
     let page = ctx.request.body.page || 1;
     let limit = ctx.request.body.limit || 8;
     const start =(page - 1)*limit;
-    const Goods = mongoose.model('Goods');
+    // const Goods = mongoose.model('Goods');
     console.log('goodsId', ctx.request.body)
     // skip 从什么位置开始过滤
     // limit 一次获取多少个
@@ -90,7 +92,7 @@ router.post('/getGoodsList', async (ctx) => {
 router.put('/goodlist', async (ctx) => {
     // console.log(ctx.request.body,"body")
     const formData = ctx.request.body  || {};
-    const Goods = mongoose.model('Goods');
+    // const Goods = mongoose.model('Goods');
     const goods = {
         goods_name: formData.goods_name,
         price: formData.price,
@@ -144,7 +146,7 @@ router.post('/goodlist', async (ctx) => {
     }
 
     console.log(goods, 'goods')
-    const Goods = mongoose.model('Goods');
+    // const Goods = mongoose.model('Goods');
 
     await Goods.findOneAndUpdate({ _id: goods_id }, goods, { new: true }).then(result => {
         if(result) {
@@ -163,7 +165,7 @@ router.post('/goodlist', async (ctx) => {
 // 删除商品
 router.delete('/goodlist/:id', async (ctx) => { 
     const goods_id = ctx.params.id  || '';
-    const Goods = mongoose.model('Goods');
+    // const Goods = mongoose.model('Goods');
 
     if(!goods_id) {
         ctx.body = {
@@ -190,7 +192,7 @@ router.delete('/goodlist/:id', async (ctx) => {
 
 // 批量上架商品
 router.post('/goodlist/batch', async (ctx) => {
-    const Goods = mongoose.model('Goods');
+    // const Goods = mongoose.model('Goods');
     let { good_list = '', type } = ctx.request.body
     good_list = good_list.split(',') || []; 
     let bulkOps = [];

@@ -2,6 +2,8 @@ const Router = require("koa-router");
 const path = require("path");
 const fs = require("fs");
 const { default: mongoose } = require("mongoose");
+const Category = require('../../database/schema/Category')
+const CategorySub = require('../../database/schema/CategorySub')
 
 let router = new Router();
 
@@ -10,7 +12,7 @@ router.get("/insertAllCategory/batchFile", async (ctx) => {
   fs.readFile("./const/category.json", "utf8", function (err, data) {
     data = JSON.parse(data);
     let saveCount = 0;
-    const Category = mongoose.model("Category");
+    // const Category = mongoose.model("Category");
     data.map((v) => {
       // 避免重复
       Category.findOne({ id: v.id })
@@ -40,7 +42,7 @@ router.get("/insertAllCategorySub", async (ctx) => {
   fs.readFile("./const/categorySub.json", "utf8", function (err, data) {
     data = JSON.parse(data);
     let saveCount = 0;
-    const CategorySub = mongoose.model("CategorySub");
+    // const CategorySub = mongoose.model("CategorySub");
     data.map((v) => {
       // 避免重复
       CategorySub.findOne({ id: v.id })
@@ -99,7 +101,7 @@ router.get("/getCategoryList", async (ctx) => {
   const { category_id } = ctx.request.query;
   console.log(ctx.request.query, "ctx.request.query");
   const query = category_id ? { id: category_id } : {};
-  const Category = mongoose.model("Category");
+  // const Category = mongoose.model("Category");
   const result = await Category.find(query).exec();
 
   console.log(result, "result");
@@ -120,7 +122,7 @@ router.get("/getCategoryList", async (ctx) => {
 // 获取二级列表
 router.get("/getCategorySubList", async (ctx) => {
   try {
-    const CategorySub = mongoose.model("CategorySub");
+    // const CategorySub = mongoose.model("CategorySub");
     const mall_id = ctx.request.query.id;
     const result = await CategorySub.find({ mall_category_id: mall_id }).exec();
 
@@ -139,7 +141,7 @@ router.get("/getCategorySubList", async (ctx) => {
 
 // 获取所有分类
 router.get("/getCategoryAllList", async (ctx) => {
-  const Category = mongoose.model("Category");
+  // const Category = mongoose.model("Category");
 
   const result = await Category.aggregate([
     {
@@ -165,7 +167,7 @@ router.get("/getCategoryAllList", async (ctx) => {
 const categoryUpdateMany = async (ctx, type) => {
   const { mall_category_name, sort, id, category_id } = ctx.request.body;
   console.log(ctx.request.body, "insertCategory", type);
-  const Category = mongoose.model("Category");
+  // const Category = mongoose.model("Category");
   const query = type === "update" ? { _id: category_id } : { id: id };
   let newCategoryObj = {
     mall_category_name: mall_category_name,
@@ -250,7 +252,7 @@ const categorySubsUpdateMany = async (ctx, type) => {
   //category_id 添加为父类id  更新为二级分类id
   const { mall_category_name, sort, id, category_id } = ctx.request.body;
   console.log(ctx.request.body, "insertCategory", type);
-  const CategorySub = mongoose.model("CategorySub");
+  // const CategorySub = mongoose.model("CategorySub");
   const query = type === "update" ? { _id: category_id } : { id: id };
   let newCategoryObj = {
     mall_category_name: mall_category_name,

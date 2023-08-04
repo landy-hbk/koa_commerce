@@ -39,4 +39,4 @@ const goodsSchema = new Schema({
     collations: 'Goods'
 })
 
-mongoose.model('Goods', goodsSchema)
+module.exports = mongoose.model('Goods', goodsSchema)

@@ -2,6 +2,9 @@ const Router = require("koa-router");
 const { default: mongoose } = require("mongoose");
 let router = new Router();
 
+const Role = require('../../database/schema/Role')
+
+
 router.get("/roleList", async (ctx) => {
 	await menuSQL(ctx, "query");
 });
@@ -29,7 +32,7 @@ const menuSQL = async (ctx, type) => {
         status,
 	};
 
-	const Role = mongoose.model("Role");
+	// const Role = mongoose.model("Role");
 
 	if (type === "query") {
 		const { role_id } = ctx.request.query;
