@@ -9,11 +9,13 @@ const AttributeValueSchema = new Schema({
         type: Number,
         unique: true,
     },
-    attribute_key: {
-      type: Schema.Types.ObjectId,
-      require: true,
-      ref: 'AttributeKey',
+    // key id
+    attribute_key_id: {
+      type: String,
+      default: null,
     },
+    // 选中key数组
+    attribute_key: [Schema.Types.String],
     // 属性value 名称
     attribute_value_name: String,
     // 创建时间
@@ -25,12 +27,12 @@ const AttributeValueSchema = new Schema({
 
 AttributeValueSchema.pre("save", async function (next) {
     const role = this;
-    if (!role.isNew || role.attribute_key_id) {
+    if (!role.isNew || role.attribute_value_id) {
       return next();
     }
     try {
-      if (!role.attribute_key_id) {
-        role.attribute_key_id = await Counter.getNextSequenceValue("attribute_key_id"); // rid是你需要自增的属性
+      if (!role.attribute_value_id) {
+        role.attribute_value_id = await Counter.getNextSequenceValue("attribute_value_id"); // rid是你需要自增的属性
       }
     } catch (err) {
       next(err);

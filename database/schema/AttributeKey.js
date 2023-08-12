@@ -7,9 +7,14 @@ const AttributeKeySchema = new Schema({
     // 商品属性组合id  _id
     // 分类id
     category_id: {
-      type: Schema.Types.ObjectId,
+      type: String,
       require: true,
       ref: 'Category',
+    },
+    category: {
+      type: [Schema.Types.String],
+      require: true,
+      default: [],
     },
     // 属性key id
     attribute_key_id: {
@@ -22,6 +27,10 @@ const AttributeKeySchema = new Schema({
     attribute_type: {
         type: String,
         default: 'Array',
+    },
+    sort: {
+      type: Number,
+      default: 0,
     },
     // 创建时间
     createTime: {

@@ -15,8 +15,6 @@ const xssHandler = () => {
       // console.error(error)
       throw error;
     }
-
-    await next();
   };
 };
 
