@@ -2,6 +2,7 @@ const mongoose = require('mongoose');
 const Schema = mongoose.Schema;
 const Counter = require('./Counter')
 
+// 菜单表接口
 const MenuSchema = new Schema({
     menu_id: {
         unique: true,

@@ -1,7 +1,7 @@
 const mongoose = require('mongoose');
 const Schema = mongoose.Schema;
 const Counter = require('./Counter')
-
+// 权限表接口
 const RoleSchema = new Schema({
     // 自增id
     role_id: {
@@ -12,6 +12,9 @@ const RoleSchema = new Schema({
     role_name: {
         type: String,
         require: true,
+        validate: function(val) {
+            return val.length > 0
+        }
     },
     // 描述
     describe: {

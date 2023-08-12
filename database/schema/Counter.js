@@ -1,6 +1,6 @@
 const mongoose = require('mongoose');
 const Schema = mongoose.Schema;
-
+// id自增表接口
 const counterSchema = new Schema({
   _id: { type: String, required: true },
   sequence_value: { type: Number, default: 1 },

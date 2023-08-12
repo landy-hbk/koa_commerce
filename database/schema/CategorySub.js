@@ -1,6 +1,6 @@
 const mongoose = require('mongoose');
 const Schema = mongoose.Schema;
-
+// 商品二级分类表接口
 const categorySubShema = new Schema({
     id: {
         unique: true,

@@ -8,15 +8,18 @@ const websocket = require("koa-websocket"); // socket
 const jwt = require("koa-jwt"); // token验证
 const jwtToken = require('jsonwebtoken');
 
+
 (async () => {
   await connect();
   initSchemas();
 })();
+ 
 
 const app = websocket(new Koa());
 const { jwtWhiteList } = require("./const/jwtWhiteList"); // token白名单
 const koaStatic = require("koa-static"); // 静态目录
 const koa2cors = require("koa2-cors"); // 配置跨域
+const xss = require('./middlewares/xss.js') // xss
 
 // 建立socket连接
 app.ws.use(async (ctx) => {
@@ -85,6 +88,7 @@ app.use(koa2cors({
     allowHeaders: ['Content-Type', 'Authorization', 'Accept'],
 }));
 app.use(bodyParser());
+app.use(xss())
 app.use(koaStatic("./"));
 // 登录注册接口不验证'/api/login','/api/register'
 // 验证失败会返回401错误

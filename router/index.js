@@ -8,6 +8,7 @@ const rule = require('./rule/index.js')
 const menu = require('./menu/index.js')
 const role = require('./role/index.js')
 const managerUser = require('./managerUser/index.js')
+const attribute = require('./attribute/index.js')
 
 let router = new Router();
 
@@ -20,5 +21,6 @@ router.use('/api/rule', rule.routes())
 router.use('/api/menu', menu.routes())
 router.use('/api/role', role.routes())
 router.use('/api/managerUser', managerUser.routes())
+router.use('/api/attribute', attribute.routes())
 
 module.exports = router

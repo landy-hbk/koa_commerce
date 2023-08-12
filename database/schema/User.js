@@ -5,7 +5,7 @@ const bcrypt = require('bcrypt');
 
 const SALT_WORK_FACTOR = 10;
 
-// 创建user Schema
+// 前台用户表接口
 const userSchema = new Schema({
     UserId: ObjectId,
     userName: {

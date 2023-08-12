@@ -6,7 +6,7 @@ const Counter = require('./Counter')
 
 const SALT_WORK_FACTOR = 10;
 
-// 创建user Schema
+// 后台用户表接口
 const ManagerUserSchema = new Schema({
     UserId: ObjectId,
     userName: {
