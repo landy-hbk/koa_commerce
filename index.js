@@ -1,6 +1,6 @@
 const Koa = require("koa");
 const { connect, initSchemas } = require("./database/index"); // moogose初始化
-const mongoose = require("mongoose"); // 数据库
+// const mongoose = require("mongoose"); // 数据库
 const router = require("./router/index.js"); // 路由
 const bodyParser = require("koa-bodyparser"); // requeast请求
 // const routers = require("koa-router")(); // 路由
@@ -8,10 +8,9 @@ const websocket = require("koa-websocket"); // socket
 const jwt = require("koa-jwt"); // token验证
 const jwtToken = require('jsonwebtoken');
 
-
 (async () => {
   await connect();
-  initSchemas();
+  await initSchemas();
 })();
  
 

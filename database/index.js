@@ -4,6 +4,7 @@ const glob  = require('glob');
 const { resolve } = require('path')
 
 exports.initSchemas = async () => {
+    // glob ：提供了一种方便地匹配文件路径的方法，可以快速地找到需要读取的文件
     await  glob.sync(resolve(__dirname, './schema', './*.js')).forEach((v) => {
         require(v)
     })

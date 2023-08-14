@@ -3,6 +3,8 @@ const mongoose = require('mongoose')
 var jwt = require('jsonwebtoken');
 let router = new Router();
 const User = require('../../database/schema/User')
+const Joi = require("joi");
+const validateSchemaJoi = require("../../middlewares/validateSchemaJoi");
 
 router.post('/login', async (ctx) => {
     const userName = ctx.request.body.userName;
@@ -53,6 +55,34 @@ router.post('/login', async (ctx) => {
     })
 
     // ctx.body = ctx.request.body;
+})
+
+const userSchema = Joi.object({
+    userName: Joi.string().min(1).required(),
+});
+
+// 用户注册
+router.post('/register', async (ctx) => {
+    const userName = ctx.request.body.userName;
+    const passWord = ctx.request.body.passWord;
+
+    let newUser = new User({
+        userName,
+        passWord,
+    })
+    .save()
+    .then((res) => {
+      ctx.body = {
+        code: 200,
+        message: "添加用户成功",
+      };
+    })
+    .catch((err) => {
+      ctx.body = {
+        code: 500,
+        message: "添加失败" + err,
+      };
+    });;
 })
 
 router.post('/update', async (ctx) => {
@@ -124,17 +154,21 @@ router.get('/list', async (ctx) => {
     // 引入user模型
     // const User  = mongoose.model('User');
     const uid  = ctx.request.query.uid || '';
+    let page = ctx.request.body.page || 1;
+    let limit = ctx.request.body.limit || 8;
+    const start =(page - 1)*limit;
     // console.log( userName, User, 'User')
-     const result = await User.find({}).skip(0).limit(10).exec()
+     const result =  await User.find().exec()
 
      console.log(result, 'result')
      ctx.body = {
         code: 200,
-        data: result,
+        data: result.slice((page-1)*limit, page*limit),
         page: {
-            pageNum: 1,
-            limit: 10,
-            total: 10,
+            page: page,
+            limit,
+            total: result.length ,
+            lastPage: parseInt(result.length / limit)
         }
      }
 

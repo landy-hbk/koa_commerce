@@ -45,6 +45,7 @@ userSchema.pre('save', function (next){
 userSchema.methods = {
     comparePassword: (_password, hashPassword) => {
         return new Promise((resolve, reject) => {
+            // 对比密码是否一致
             bcrypt.compare(_password, hashPassword, (err, isMatch) => {
                 if(!err) resolve(isMatch);
 
